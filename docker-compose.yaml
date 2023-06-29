@@ -1,0 +1,69 @@
+version: '3.2'
+
+networks:
+  public_dmz:
+    external: true
+  agent_network:
+    external: true
+  control_plane:
+    external: false
+
+volumes:
+  datastore_config:
+  datastore_portainer:
+
+services:
+  agent:
+    image: portainer/agent:latest
+    environment:
+      # REQUIRED: Should be equal to the service name prefixed by "tasks." when
+      # deployed inside an overlay network
+      AGENT_CLUSTER_ADDR: tasks.agent
+      # AGENT_PORT: 9001
+      # LOG_LEVEL: debug
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /var/lib/docker/volumes:/var/lib/docker/volumes
+    networks:
+      - agent_network
+    deploy:
+      mode: global
+      placement:
+        constraints: [node.platform.os == linux]
+
+  portainer:
+    image: portainer/portainer-ee:latest
+    command: -H tcp://tasks.agent:9001 --tlsskipverify
+    volumes:
+      - datastore_portainer:/data
+    networks:
+      - public_dmz
+      - agent_network
+    deploy:
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints: [node.role == manager]
+      labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.portainer.rule=Host(`portainer.cpanel.csp.cloud.premier-ictc.com`)"
+      - "traefik.http.routers.portainer.entrypoints=web"
+      - "traefik.http.services.portainer.loadbalancer.server.port=9000"
+      - "traefik.http.routers.portainer.service=portainer"
+      # Edge
+      - "traefik.http.routers.edge.rule=Host(`edge.cpanel.csp.cloud.premier-ictc.com`)"
+      - "traefik.http.routers.edge.entrypoints=web"
+      - "traefik.http.services.edge.loadbalancer.server.port=8000"
+      - "traefik.http.routers.edge.service=edge"
+
+  cpanel:
+    # The official Teleport docker image
+    image: public.ecr.aws/gravitational/teleport:13
+    networks:
+      - "control_plane"
+    # ports:
+    #   - "3080"
+    volumes:
+      - ./sso:/etc/teleport
+    labels:
+      - "traefik.http.routers.cpanel.rule=Host(`sso.csp.cloud.premier-ictc.com`)"
