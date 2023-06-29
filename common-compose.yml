@@ -1,0 +1,52 @@
+version: '3.1'
+
+services:
+  common_proxy:
+    # The official v2 Traefik docker image
+    image: traefik:latest
+    # Enables the web UI and tells Traefik to listen to docker
+    # command: --api.insecure=true --providers.docker
+    ports:
+      # The HTTP port
+      - "80:80"
+      # The HTTP port
+      - "443:443"
+      # The Web UI (enabled by --api.insecure=true)
+      - "8080:8080"
+    volumes:
+      # So that Traefik can listen to the Docker events
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./reverse-proxy:/etc/traefik
+      - datastore-certs-tls:/ssl-certs
+    # command:
+    #   - --docker.endpoint=unix:///var/run/docker.sock
+    #   - --docker.domain=my-awesome-app.org
+    #   - --docker.watch=true
+    #   - --docker.exposedbydefault=false
+    #   - --debug=false
+    #   - --logLevel=ERROR
+    #   - --defaultentrypoints=https,http
+    #   - --entryPoints=Name:http Address::80 Redirect.EntryPoint:https
+    #   - --entryPoints=Name:https Address::443 TLS
+    #   - --retry
+    #   - --acme.email=support@premier-ictc.com
+    #   - --acme.storage=acme.json
+    #   - --acme.entryPoint=https
+    #   - --acme.onHostRule=true
+    #   - --acme.httpchallenge.entrypoint=http
+
+
+  common_cpanel:
+    # The official Teleport docker image
+    image: public.ecr.aws/gravitational/teleport:13
+    # networks:
+    #   - "management_tier"
+    #   - "public_tier"
+    ports:
+      - "3080:3080"
+    volumes:
+      - ./sso:/etc/teleport
+    labels:
+      - "traefik.http.routers.cpanel.rule=Host(`cpanel.localhost`)"
+      - "traefik.http.routers.cpanel.rule=Host(`traefik.cpanel.localhost`)"
+

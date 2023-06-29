@@ -1,0 +1,41 @@
+version: v3
+teleport:
+  # Data directory for the Application Proxy service. If running on the same
+  # node as Auth/Proxy service, make sure to use different data directories.
+  data_dir: /var/lib/teleport-app
+  # Instructs the service to load the auth token from the specified file
+  # during initial registration with the cluster.
+  auth_token: /tmp/token
+  # Proxy address to connect to. Note that it has to be the proxy address
+  # because the app service always connects to the cluster over a reverse
+  # tunnel.
+  proxy_server: localhost:3080
+app_service:
+    enabled: yes
+    # Teleport provides a small debug app called "dumper" that can be used
+    # to make sure application access is working correctly. It outputs JWTs,
+    #  so it can be useful when extending your application.
+    debug_app: true
+    # This section contains definitions of all applications proxied by this
+    # service. It can contain multiple items.
+    apps:
+      # Name of the application. Used for identification purposes.
+    - name: "traefik"
+      # URI and port the application is available at.
+      uri: "http://reverse-proxy:8080"
+      # Optional application public address to override.
+      public_addr: "traefik.cpanel.localhost"
+      # Optional static labels to assign to the app. Used in RBAC.
+      labels:
+        env: "prod"
+      # Optional dynamic labels to assign to the app. Used in RBAC.
+      commands:
+      - name: "os"
+        command: ["/usr/bin/uname"]
+        period: "5s"
+auth_service:
+  enabled: "no"
+ssh_service:
+  enabled: "no"
+proxy_service:
+  enabled: "no"

@@ -17,17 +17,17 @@ exposedbydefault = false
 [entryPoints]
   [entryPoints.http]
   address = ":80"
-    [entryPoints.http.redirect]
-    entryPoint = "https"
+    # [entryPoints.http.redirect]
+    # entryPoint = "https"
   [entryPoints.https]
   address = ":443"
-    [entryPoints.https.tls]
+    # [entryPoints.https.tls]
   
 # Let's encrypt configuration
-[acme]
-  email="support@premier-ictc.com"
-  storage="/etc/traefik/acme.json"
-  entryPoint="https"
-  acmeLogging=true
-  onDemand=true
-  OnHostRule=true
+# [acme]
+#   email="support@premier-ictc.com"
+#   storage="/etc/traefik/acme.json"
+#   entryPoint="https"
+#   acmeLogging=true
+#   onDemand=true
+#   OnHostRule=true
