@@ -2,7 +2,7 @@ version: '3.2'
 
 networks:
   public_dmz:
-    driver: bridge
+    # driver: bridge
     external: true
   agent_network:
     external: true
