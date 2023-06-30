@@ -10,7 +10,8 @@ networks:
     external: false
 
 volumes:
-  datastore_config:
+  datastore_config: 
+
   datastore_portainer:
 
 services:
@@ -19,7 +20,7 @@ services:
       context: ./
       dockerfile: Dockerfile
     environment:
-      - BUILD_DIR=$HOME
+      - BUILD_DIR=~/CloudServices
     privileged: true
     # interactive: true
     tty: true    
@@ -29,8 +30,8 @@ services:
     #   - "3080"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - /etc/traefik:$BUILD_DIR/reverse_proxy
-      - datastore_config:$BUILD_DIR
+      - /etc/traefik:~/CloudServices/reverse_proxy
+      - datastore_config:~/CloudServices
     labels:
       - "traefik.http.routers.cpanel.rule=Host(`installer.cpanel.cloud.premier-ictc.com`)"
 
