@@ -15,7 +15,7 @@ http:
     sso_identity:
       loadBalancer:
         servers:
-          - url: http://cpanel:3080/
+          - url: http://cpanel:3025/
 
   ## MIDDLEWARES ##
   middlewares:
@@ -49,25 +49,25 @@ http:
     #       - Remote-Email
 
     # Security headers
-    # securityHeaders:
-    #   headers:
-    #     customResponseHeaders:
-    #       X-Robots-Tag: "none,noarchive,nosnippet,notranslate,noimageindex"
-    #       server: ""
-    #       X-Forwarded-Proto: "https"
-    #     sslProxyHeaders:
-    #       X-Forwarded-Proto: https
-    #     referrerPolicy: "strict-origin-when-cross-origin"
-    #     hostsProxyHeaders:
-    #       - "X-Forwarded-Host"
-    #     customRequestHeaders:
-    #       X-Forwarded-Proto: "https"
-    #     contentTypeNosniff: true
-    #     browserXssFilter: true
-    #     forceSTSHeader: true
-    #     stsIncludeSubdomains: true
-    #     stsSeconds: 63072000
-    #     stsPreload: true
+    securityHeaders:
+      headers:
+        customResponseHeaders:
+          X-Robots-Tag: "none,noarchive,nosnippet,notranslate,noimageindex"
+          server: ""
+          X-Forwarded-Proto: "https"
+        sslProxyHeaders:
+          X-Forwarded-Proto: https
+        referrerPolicy: "strict-origin-when-cross-origin"
+        hostsProxyHeaders:
+          - "X-Forwarded-Host"
+        customRequestHeaders:
+          X-Forwarded-Proto: "https"
+        contentTypeNosniff: true
+        browserXssFilter: true
+        forceSTSHeader: true
+        stsIncludeSubdomains: true
+        stsSeconds: 63072000
+        stsPreload: true
 
 # Only use secure ciphers - https://ssl-config.mozilla.org/#server=traefik&version=2.6.0&config=intermediate&guideline=5.6
 tls:
