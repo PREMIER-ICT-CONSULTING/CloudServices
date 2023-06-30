@@ -1,3 +1,9 @@
 [submodule "docker_build"]
 	path = docker_build
 	url = https://github.com/PREMIER-ICT-CONSULTING/docker_build.git
+[submodule "stacks/docker-odoo_ce-ccoba_kingston"]
+	path = stacks/docker-odoo_ce-ccoba_kingston
+	url = https://github.com/PREMIER-ICT-CONSULTING/docker-odoo_ce-ccoba_kingston.git
+[submodule "stacks/docker-odoo_ce-svcbs"]
+	path = stacks/docker-odoo_ce-svcbs
+	url = https://github.com/PREMIER-ICT-CONSULTING/docker-odoo_ce-svcbs.git
