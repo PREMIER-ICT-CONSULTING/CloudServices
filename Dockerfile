@@ -5,7 +5,7 @@ WORKDIR $BUILD_DIR
 
 RUN git config --global user.name "PICTC"
 RUN git config --global user.email "support@premier-ictc.com"
-RUN git clone https://github.com/PREMIER-ICT-CONSULTING/CloudServices.git
+RUN git clone https://github.com/PREMIER-ICT-CONSULTING/CloudServices.git#main
 RUN cd "CloudServices"
 
 VOLUME ["/var/run/docker.sock"]
