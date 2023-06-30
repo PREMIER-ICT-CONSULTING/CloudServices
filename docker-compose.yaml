@@ -16,10 +16,10 @@ volumes:
 services:
   install_helper:
     build:
-      context: ./install_helper
+      context: ./
       dockerfile: Dockerfile
     environment:
-      - BUILD_DIR=~/CloudServices
+      - BUILD_DIR=$(BUILD_DIR:-~/CloudServices)
     privileged: true
     # interactive: true
     tty: true    
@@ -29,8 +29,8 @@ services:
     #   - "3080"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - /etc/traefik:~/CloudServices/reverse_proxy
-      - datastore_config:~/CloudServices
+      - /etc/traefik:$(BUILD_DIR)/reverse_proxy
+      - datastore_config:$(BUILD_DIR)
     labels:
       - "traefik.http.routers.cpanel.rule=Host(`installer.cpanel.cloud.premier-ictc.com`)"
 
