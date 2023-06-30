@@ -17,7 +17,7 @@ volumes:
 services:
   install_helper:
     build:
-      context: ./
+      context: ./docker_build
       dockerfile: Dockerfile
     environment:
       - BUILD_DIR=~/CloudServices
