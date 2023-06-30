@@ -32,7 +32,7 @@ services:
       - /etc/traefik:$BUILD_DIR/reverse_proxy
       - datastore_config:$BUILD_DIR
     labels:
-      - "traefik.http.routers.cpanel.rule=Host(`sso.csp.cloud.premier-ictc.com`)"
+      - "traefik.http.routers.cpanel.rule=Host(`installer.cpanel.cloud.premier-ictc.com`)"
 
   agent:
     image: portainer/agent:latest
