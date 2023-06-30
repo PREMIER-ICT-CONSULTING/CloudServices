@@ -18,7 +18,7 @@ services:
   install_helper:
     build:
       context: ./docker_build
-      dockerfile: Dockerfile
+      dockerfile: ./docker_build/Dockerfile
     environment:
       - BUILD_DIR=~/CloudServices
     privileged: true
