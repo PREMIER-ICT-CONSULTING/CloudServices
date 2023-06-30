@@ -2,6 +2,7 @@ version: '3.2'
 
 networks:
   public_dmz:
+    driver: bridge
     external: true
   agent_network:
     external: true
@@ -13,6 +14,26 @@ volumes:
   datastore_portainer:
 
 services:
+  install_helper:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    environment:
+      - BUILD_DIR=$HOME
+    privileged: true
+    # interactive: true
+    tty: true    
+    networks:
+      - "control_plane"
+    # ports:
+    #   - "3080"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /etc/traefik:$BUILD_DIR/reverse_proxy
+      - datastore_config:$BUILD_DIR
+    labels:
+      - "traefik.http.routers.cpanel.rule=Host(`sso.csp.cloud.premier-ictc.com`)"
+
   agent:
     image: portainer/agent:latest
     environment:
@@ -67,3 +88,4 @@ services:
       - ./sso:/etc/teleport
     labels:
       - "traefik.http.routers.cpanel.rule=Host(`sso.csp.cloud.premier-ictc.com`)"
+
