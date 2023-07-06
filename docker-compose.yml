@@ -14,8 +14,8 @@ networks:
 
 volumes:
   datastore_config: 
-  datastore_portainer:
-  datastore_teleport:
+  # datastore_portainer:
+  # datastore_teleport:
 
 services:
   cloud_cli:
@@ -33,7 +33,7 @@ services:
     #   - "3080"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - /etc/traefik:$HOME/CloudServices/reverse_proxy
+      - /var/snap/traefik/common:$HOME/CloudServices/reverse_proxy
       - datastore_config:$HOME/CloudServices
     labels:
       - "traefik.enable=true"
