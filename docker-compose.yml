@@ -7,11 +7,9 @@ networks:
     external: true
   agent_network:
     driver: overlay
-    scope: swarm
     external: false
   control_plane:
     driver: overlay
-    scope: swarm
     external: false
 
 volumes:
