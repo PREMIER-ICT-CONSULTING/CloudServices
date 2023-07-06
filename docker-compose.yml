@@ -23,17 +23,17 @@ services:
       dockerfile: Dockerfile
     environment:
       - BUILD_DIR=$HOME/CloudServices
-    privileged: true
+    # privileged: true
     # interactive: true
-    tty: true    
+    # tty: true    
     networks:
       - "control_plane"
     # ports:
     #   - "3080"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - /var/snap/traefik/common:$HOME/CloudServices/reverse_proxy
       - datastore_config:$HOME/CloudServices
+      - /var/snap/traefik/common:$HOME/CloudServices/reverse_proxy
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.install_helper.rule=Host(`installer.cpanel.cloud.premier-ictc.com`)"
