@@ -18,9 +18,10 @@ volumes:
 
 services:
   cloud_cli:
-    build:
-      context: ./
-      dockerfile: Dockerfile
+    # build:
+    #   context: ./
+    #   dockerfile: Dockerfile
+    image: docker/dev-environments-default:stable-1
     environment:
       - BUILD_DIR=$HOME/CloudServices
     # privileged: true
@@ -34,6 +35,11 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
       - datastore_config:$HOME/CloudServices
       - /var/snap/traefik/common:$HOME/CloudServices/reverse_proxy
+    command: 
+      - git config --global user.name "PICTC"
+      - git config --global user.email "support@premier-ictc.com"
+      - git clone https://github.com/PREMIER-ICT-CONSULTING/CloudServices.git
+      - cd "CloudServices"
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.install_helper.rule=Host(`installer.cpanel.cloud.premier-ictc.com`)"
