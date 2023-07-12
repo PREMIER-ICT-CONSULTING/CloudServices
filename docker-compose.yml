@@ -1,0 +1,111 @@
+version: '3.2'
+
+networks:
+  public_dmz:
+    driver: overlay
+    external: true
+  agent_network:
+    driver: overlay
+    external: false
+  control_plane:
+    driver: overlay
+    external: false
+
+volumes:
+  datastore_config: 
+  # datastore_portainer:
+  # datastore_teleport:
+
+services:
+  cloud_cli:
+    # build:
+    #   context: ./
+    #   dockerfile: Dockerfile
+    image: docker/dev-environments-default:stable-1
+    environment:
+      - BUILD_DIR=$HOME/CloudServices
+    # privileged: true
+    # interactive: true
+    # tty: true    
+    networks:
+      - "control_plane"
+    # ports:
+    #   - "3080"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - datastore_config:$HOME/CloudServices
+      - /var/snap/traefik/common:$HOME/CloudServices/reverse_proxy
+    command: 
+      - git config --global user.name "PICTC"
+      - git config --global user.email "support@premier-ictc.com"
+      - git clone https://github.com/PREMIER-ICT-CONSULTING/CloudServices.git
+      - cd "CloudServices"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.install_helper.rule=Host(`installer.cpanel.cloud.premier-ictc.com`)"
+
+  # agent:
+  #   image: portainer/agent:latest
+  #   environment:
+  #     AGENT_CLUSTER_ADDR: tasks.agent
+  #     AGENT_PORT: 9001
+  #     LOG_LEVEL: DEBUG
+  #   volumes:
+  #     - /var/run/docker.sock:/var/run/docker.sock
+  #     - /var/lib/docker/volumes:/var/lib/docker/volumes
+  #   networks:
+  #     - agent_network
+  #   deploy:
+  #     mode: global
+  #     placement:
+  #       constraints: [node.platform.os == linux]
+
+  # portainer:
+  #   image: portainer/portainer-ee:latest
+  #   command: -H tcp://tasks.agent:9001 --tlsskipverify
+  #   volumes:
+  #     - datastore_portainer:/data
+  #   networks:
+  #     - public_dmz
+  #     - agent_network
+  #   deploy:
+  #     mode: replicated
+  #     replicas: 1
+  #     placement:
+  #       constraints: [node.role == manager]
+  #     labels:
+  #     - "traefik.enable=true"
+  #     - "traefik.http.routers.portainer.service=portainer"
+  #     - "traefik.http.routers.portainer.entrypoints=https"
+  #     - "traefik.http.routers.portainer.rule=Host(`portainer.cpanel.csp.cloud.premier-ictc.com`)"
+  #     - "traefik.http.services.portainer.loadbalancer.server.port=9000"
+  #     # Edge
+  #     - "traefik.http.routers.edge.service=edge"
+  #     - "traefik.http.routers.edge.entrypoints=https"
+  #     - "traefik.http.routers.edge.rule=Host(`edge.cpanel.csp.cloud.premier-ictc.com`)"
+  #     - "traefik.http.services.edge.loadbalancer.server.port=8000"
+
+  # cpanel:
+  #   # The official Teleport docker image
+  #   image: public.ecr.aws/gravitational/teleport:13
+  #   networks:
+  #     - "control_plane"
+  #   # ports:
+  #   #   - "3080"
+  #   volumes:
+  #     - ./sso:/etc/teleport
+  #     - datastore_teleport:/var/lib/teleport
+  #   labels:
+  #     - "traefik.enable=true"
+  #     # Proxy 
+  #     - "traefik.http.routers.cpanel.service=cpanel"
+  #     - "traefik.http.routers.cpanel.entrypoints=https"
+  #     - "traefik.http.routers.cpanel.rule=Host(`*.cpanel.csp.cloud.premier-ictc.com`)"
+  #     # - "traefik.http.routers.cpanel.rule=Host(`cpanel.csp.cloud.premier-ictc.com`)"
+  #     - "traefik.http.services.cpanel.loadbalancer.server.port=3080"
+  #     # Auth
+  #     - "traefik.http.routers.sso.service=cpanel"
+  #     - "traefik.http.routers.sso.entrypoints=https"
+  #     - "traefik.http.routers.sso.rule=Host(`sso.csp.cloud.premier-ictc.com`)"
+  #     - "traefik.http.services.sso.loadbalancer.server.port=3025"
+
