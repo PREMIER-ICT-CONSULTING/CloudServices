@@ -41,8 +41,8 @@ entryPoints:
     #       scheme: https
 
   # HTTPS endpoint, with domain wildcard
-  https:
-    address: :443
+  # https:
+  #   address: :443
     # forwardedHeaders:
       # Reuse list of Cloudflare Trusted IP's above for HTTPS requests
       # trustedIPs: *trustedIps
@@ -68,7 +68,7 @@ providers:
   # Docker provider for connecting all apps that are inside of the docker network
   docker:
     watch: true
-    network: public_dmz # Add Your Docker Network Name Here
+    network: control_plane_control_plane # Add Your Docker Network Name Here
     # Default host rule to containername.domain.example
     defaultRule: "Host(`{{ index .Labels \"com.docker.compose.service\"}}.cloud.premier-ictc.com`)"
     swarmModeRefreshSeconds: 15s
