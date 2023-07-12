@@ -42,7 +42,7 @@ services:
       - cd "CloudServices"
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.install_helper.rule=Host(`installer.cpanel.cloud.premier-ictc.com`)"
+      - "traefik.http.routers.cloud_cli.rule=Host(`cli.cpanel.cloud.localhost`)"
 
   # agent:
   #   image: portainer/agent:latest
