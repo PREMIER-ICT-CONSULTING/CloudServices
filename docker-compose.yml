@@ -1,13 +1,13 @@
 version: '3.2'
 
 networks:
-  public_dmz:
-    driver: overlay
-    external: true
-  agent_network:
+  public_overlay:
     driver: overlay
     external: false
-  control_plane:
+  agent_overlay:
+    driver: overlay
+    external: false
+  control_overlay:
     driver: overlay
     external: false
 
@@ -28,7 +28,7 @@ services:
     # interactive: true
     # tty: true    
     networks:
-      - "control_plane"
+      - "control_overlay"
     # ports:
     #   - "3080"
     volumes:
@@ -54,7 +54,7 @@ services:
   #     - /var/run/docker.sock:/var/run/docker.sock
   #     - /var/lib/docker/volumes:/var/lib/docker/volumes
   #   networks:
-  #     - agent_network
+  #     - agent_overlay
   #   deploy:
   #     mode: global
   #     placement:
@@ -66,8 +66,8 @@ services:
   #   volumes:
   #     - datastore_portainer:/data
   #   networks:
-  #     - public_dmz
-  #     - agent_network
+  #     - public_overlay
+  #     - agent_overlay
   #   deploy:
   #     mode: replicated
   #     replicas: 1
@@ -89,7 +89,7 @@ services:
   #   # The official Teleport docker image
   #   image: public.ecr.aws/gravitational/teleport:13
   #   networks:
-  #     - "control_plane"
+  #     - "control_overlay"
   #   # ports:
   #   #   - "3080"
   #   volumes:
