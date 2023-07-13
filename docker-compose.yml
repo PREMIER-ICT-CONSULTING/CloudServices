@@ -17,6 +17,13 @@ volumes:
   # datastore_teleport:
 
 services:
+  whoami:
+    # A container that exposes an API to show its IP address
+    image: traefik/whoami
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.whoami.rule=Host(`whoami.docker.localhost`)"
+  
   cloud_cli:
     # build:
     #   context: ./
