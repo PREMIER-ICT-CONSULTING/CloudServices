@@ -62,13 +62,13 @@ providers:
 
   # File provider for connecting things that are outside of docker / defining middleware
   file:
-    filename: /etc/traefik/fileConfig.yml
+    filename: ./control_plane.yml
     watch: true
 
   # Docker provider for connecting all apps that are inside of the docker network
   docker:
     watch: true
-    network: public_dmz # Add Your Docker Network Name Here
+    network: control_plane_public_overlay # Add Your Docker Network Name Here
     # Default host rule to containername.domain.example
     defaultRule: "Host(`{{ index .Labels \"com.docker.compose.service\"}}.cloud.premier-ictc.com`)"
     swarmModeRefreshSeconds: 15s
@@ -88,7 +88,7 @@ certificatesResolvers:
   letsencrypt:
     acme:
       email: support@premier-ictc.com  # change to your provider account email address.
-      storage: /etc/traefik/acme.json
+      storage: ./acme.json
       # dnsChallenge:
       #   provider: cloudflare
         # Used to make sure the dns challenge is propagated to the rights dns servers
