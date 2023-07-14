@@ -16,15 +16,6 @@ volumes:
   datastore_portainer:
   # datastore_teleport:
 
-configs:
-  traefik_config:
-    file: ./traefik.yml
-      # - ./control_plane.yml
-      # - ./acme.json
-      # - ./config/*
-  # my_other_config:
-  #   external: true
-
 services:
   cloud_cli:
     # build:
@@ -132,3 +123,11 @@ services:
   #     - "traefik.http.routers.sso.rule=Host(`sso.csp.cloud.premier-ictc.com`)"
   #     - "traefik.http.services.sso.loadbalancer.server.port=3025"
 
+configs:
+  traefik_config:
+    file: ./traefik.yml
+      # - ./control_plane.yml
+      # - ./acme.json
+      # - ./config/*
+  # my_other_config:
+  #   external: true
