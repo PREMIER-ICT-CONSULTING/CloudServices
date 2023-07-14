@@ -41,12 +41,12 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
       - datastore_config:$HOME/CloudServices
       - /var/snap/traefik/common:$HOME/CloudServices/reverse_proxy
-    configs:
-      - source: traefik_config
-        target: ~/CloudServices/reverse_proxy
-        uid: '103'
-        gid: '103'
-        mode: 0600
+    # configs:
+    #   - source: traefik_config
+    #     target: ~/CloudServices/reverse_proxy
+    #     uid: '103'
+    #     gid: '103'
+    #     mode: 0600
     deploy:
       mode: global
       placement:
@@ -123,9 +123,9 @@ services:
   #     - "traefik.http.routers.sso.rule=Host(`sso.csp.cloud.premier-ictc.com`)"
   #     - "traefik.http.services.sso.loadbalancer.server.port=3025"
 
-configs:
-  traefik_config:
-    file: ./traefik.yml
+# configs:
+#   traefik_config:
+#     file: ./traefik.yml
       # - ./control_plane.yml
       # - ./acme.json
       # - ./config/*
