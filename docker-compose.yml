@@ -18,9 +18,8 @@ volumes:
 
 configs:
   traefik_config:
-    file: 
-      - ./traefik.yml
-      - ./control_plane.yml
+    file: ./traefik.yml
+      # - ./control_plane.yml
       # - ./acme.json
       # - ./config/*
   # my_other_config:
