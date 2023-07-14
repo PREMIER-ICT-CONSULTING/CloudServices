@@ -34,28 +34,28 @@ entryPoints:
         # - 2a06:98c0::/29
         # - 2c0f:f248::/32
         # End of Cloudlare public IP list
-    http:
-      redirections:
-        entryPoint:
-          to: https
-          scheme: https
+    # http:
+    #   redirections:
+    #     entryPoint:
+    #       to: https
+    #       scheme: https
 
   # HTTPS endpoint, with domain wildcard
-  https:
-    address: :443
-    # forwardedHeaders:
-      # Reuse list of Cloudflare Trusted IP's above for HTTPS requests
-      # trustedIPs: *trustedIps
-    http:
-      tls:
-        # Generate a wildcard domain certificate
-        certResolver: letsencrypt
-        domains:
-          - main: csp.cloud.premier-ictc.com
-            sans:
-              - '*.csp.cloud.premier-ictc.com'
-      # middlewares:
-      #   - securityHeaders@file
+  # https:
+  #   address: :443
+  #   # forwardedHeaders:
+  #     # Reuse list of Cloudflare Trusted IP's above for HTTPS requests
+  #     # trustedIPs: *trustedIps
+  #   http:
+  #     tls:
+  #       # Generate a wildcard domain certificate
+  #       certResolver: letsencrypt
+  #       domains:
+  #         - main: csp.cloud.premier-ictc.com
+  #           sans:
+  #             - '*.csp.cloud.premier-ictc.com'
+  #     # middlewares:
+  #     #   - securityHeaders@file
 
 providers:
   providersThrottleDuration: 2s
@@ -84,14 +84,14 @@ log:
 
 
 # Use letsencrypt to generate ssl serficiates
-certificatesResolvers:
-  letsencrypt:
-    acme:
-      email: support@premier-ictc.com  # change to your provider account email address.
-      storage: ./acme.json
-      # dnsChallenge:
-      #   provider: cloudflare
-        # Used to make sure the dns challenge is propagated to the rights dns servers
-        # resolvers:
-        #   - "1.1.1.1:53"
-        #   - "1.0.0.1:53"
+# certificatesResolvers:
+#   letsencrypt:
+#     acme:
+#       email: support@premier-ictc.com  # change to your provider account email address.
+#       storage: ./acme.json
+#       # dnsChallenge:
+#       #   provider: cloudflare
+#         # Used to make sure the dns challenge is propagated to the rights dns servers
+#         # resolvers:
+#         #   - "1.1.1.1:53"
+#         #   - "1.0.0.1:53"
