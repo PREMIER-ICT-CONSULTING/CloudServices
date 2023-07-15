@@ -80,7 +80,7 @@ services:
     volumes:
       - datastore_portainer:/data
     networks:
-      - public_overlay
+      - control_overlay
       - agent_overlay
     deploy:
       mode: replicated

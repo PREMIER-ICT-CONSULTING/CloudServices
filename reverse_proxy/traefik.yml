@@ -68,7 +68,7 @@ providers:
   # Docker provider for connecting all apps that are inside of the docker network
   docker:
     watch: true
-    network: control_plane_public_overlay # Add Your Docker Network Name Here
+    network: control_plane_control_overlay # Add Your Docker Network Name Here
     # Default host rule to containername.domain.example
     defaultRule: "Host(`{{ index .Labels \"com.docker.compose.service\"}}.cloud.premier-ictc.com`)"
     swarmModeRefreshSeconds: 15s
