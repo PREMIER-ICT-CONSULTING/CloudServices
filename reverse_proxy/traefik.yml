@@ -71,6 +71,11 @@ providers:
   docker:
     watch: true
     network: control_plane_control_overlay # Add Your Docker Network Name Here
+    # Docker Standalone Mode
+    # endpoint: "unix:///var/run/docker.sock"
+    # Docker Swarm Mode
+    endpoint: "tcp://docker_proxy:2375"
+    swarmMode: true    
     # Default host rule to containername.domain.example
     defaultRule: "Host(`{{ index .Labels \"com.docker.compose.service\"}}.cloud.premier-ictc.com`)"
     swarmModeRefreshSeconds: 15s
