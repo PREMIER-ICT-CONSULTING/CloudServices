@@ -28,11 +28,11 @@ services:
     # Enables the web UI and tells Traefik to listen to docker
     command: --api.insecure=true 
       --providers.docker 
-      --providers.docker.endpoint="tcp://127.0.0.1:2377"
+      --providers.docker.endpoint="tcp://host.docker.internal:2377"
       --providers.docker.swarmMode=true
       # --providers.docker.tls.insecureSkipVerify=true
       # --providers.docker.exposedByDefault=false
-    network_mode: host
+    #network_mode: host
     ports:
       # The HTTP port
       - mode: ingress
