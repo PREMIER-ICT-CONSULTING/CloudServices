@@ -19,7 +19,6 @@ volumes:
 services:
   docker_proxy:
     image: tecnativa/docker-socket-proxy
-    container_name: docker_proxy
     restart: unless-stopped
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
@@ -29,6 +28,23 @@ services:
       # - docker_host_proxy
       - control_overlay
 
+  reverse_proxy:
+    # The official v2 Traefik docker image
+    image: traefik:v2.10
+    # Enables the web UI and tells Traefik to listen to docker
+    command: --api.insecure=true --providers.docker
+    ports:
+      # The HTTP port
+      - "80:80"
+      # The Web UI (enabled by --api.insecure=true)
+      - "8080:8080"
+    volumes:
+      # So that Traefik can listen to the Docker events
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      # - docker_host_proxy
+      - control_overlay
+      
   cloud_cli:
     # build:
     #   context: ./
