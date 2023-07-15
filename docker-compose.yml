@@ -35,13 +35,13 @@ services:
     #network_mode: host
     ports:
       # The HTTP port
-      - mode: ingress
+      - mode: host
         target: 80
         published: 80
         # host_ip: "0.0.0.0"
         # protocol: 
       # The Web UI (enabled by --api.insecure=true)
-      - mode: ingress
+      - mode: host
         target: 8080
         published: 8080
         # host_ip: "0.0.0.0"
