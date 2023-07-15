@@ -99,6 +99,14 @@ services:
       - "traefik.http.routers.edge.rule=Host(`edge.cpanel.csp.cloud.premier-ictc.com`)"
       - "traefik.http.services.edge.loadbalancer.server.port=8000"
 
+  whoami:
+    # A container that exposes an API to show its IP address
+    image: traefik/whoami
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.whoami.rule=Host(`whoami.docker.localhost`)"
+
+
   # cpanel:
   #   # The official Teleport docker image
   #   image: public.ecr.aws/gravitational/teleport:13
