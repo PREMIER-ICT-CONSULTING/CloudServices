@@ -1,4 +1,4 @@
-version: '3'
+version: '3.4'
 
 # networks:
 #   outside:
@@ -36,16 +36,16 @@ services:
     #   - outside
     ports:
       # The HTTP port
-      - target: "80"
-        host_ip: "0.0.0.0"
-        published: "80"
-        protocol: 
+      - target: 80
+        # host_ip: "0.0.0.0"
+        published: 80
+        # protocol: 
         mode: host
       # The Web UI (enabled by --api.insecure=true)
-      - target: "8080"
-        host_ip: "0.0.0.0"
-        published: "8080"
-        protocol: 
+      - target: 8080
+        # host_ip: "0.0.0.0"
+        published: 8080
+        # protocol: 
         mode: host
     # volumes:
       # So that Traefik can listen to the Docker events
