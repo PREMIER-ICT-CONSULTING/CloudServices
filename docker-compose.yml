@@ -136,8 +136,8 @@ services:
       mode: replicated
       replicas: 1
       labels:
-        # - "traefik.enable=true"
-        - "traefik.http.routers.whoami.rule=Host(`portainer.cpanel.csp.cloud.premier-ictc.com`)"
+        - "traefik.enable=true"
+        - "traefik.http.routers.whoami.rule=Host(`cli.cpanel.csp.cloud.premier-ictc.com`)"
 
 
   # cpanel:
