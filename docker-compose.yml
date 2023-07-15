@@ -35,7 +35,7 @@ services:
     #network_mode: host
     ports:
       # The HTTP port
-      - mode: ingress
+      - mode: host
         target: 80
         published: 80
         # host_ip: "0.0.0.0"
