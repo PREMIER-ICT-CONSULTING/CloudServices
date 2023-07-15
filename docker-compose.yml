@@ -1,4 +1,4 @@
-version: '3.4'
+version: "3.4"
 
 # networks:
 #   outside:
@@ -32,21 +32,20 @@ services:
       --providers.docker.swarmMode=true
       # --providers.docker.tls.insecureSkipVerify=true
       # --providers.docker.exposedByDefault=false
-    # networks:
-    #   - outside
+    network_mode: host
     ports:
       # The HTTP port
-      - target: 80
-        # host_ip: "0.0.0.0"
+      - mode: ingress
+        target: 80
         published: 80
-        # protocol: 
-        mode: host
-      # The Web UI (enabled by --api.insecure=true)
-      - target: 8080
         # host_ip: "0.0.0.0"
-        published: 8080
         # protocol: 
-        mode: host
+      # The Web UI (enabled by --api.insecure=true)
+      - mode: host
+        target: 8080
+        published: 8080
+        # host_ip: "0.0.0.0"
+        # protocol: 
     # volumes:
       # So that Traefik can listen to the Docker events
       # - /var/run/docker.sock:/var/run/docker.sock
