@@ -28,8 +28,8 @@ services:
     # Enables the web UI and tells Traefik to listen to docker
     command: --api.insecure=true 
       --providers.docker 
-      --providers.docker.endpoint="tcp://host.docker.internal:2377"
-      --providers.docker.swarmMode=true
+      # --providers.docker.endpoint="tcp://host.docker.internal:2377"
+      # --providers.docker.swarmMode=true
       # --providers.docker.tls.insecureSkipVerify=true
       # --providers.docker.exposedByDefault=false
     #network_mode: host
@@ -46,9 +46,9 @@ services:
         published: 8080
         # host_ip: "0.0.0.0"
         # protocol: 
-    # volumes:
+    volumes:
       # So that Traefik can listen to the Docker events
-      # - /var/run/docker.sock:/var/run/docker.sock
+      - /var/run/docker.sock:/var/run/docker.sock
     deploy:
       mode: global
       placement:
