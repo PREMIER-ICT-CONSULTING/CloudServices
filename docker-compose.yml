@@ -11,7 +11,7 @@ version: '3.2'
 #     driver: overlay
 #     external: false
 
-# volumes:
+volumes:
   # datastore_config: 
   datastore_portainer:
   # datastore_teleport:
