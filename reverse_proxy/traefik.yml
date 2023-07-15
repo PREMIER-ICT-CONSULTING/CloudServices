@@ -53,7 +53,9 @@ entryPoints:
   #       domains:
   #         - main: csp.cloud.premier-ictc.com
   #           sans:
-  #             - '*.csp.cloud.premier-ictc.com'
+  #             - portainer.cpanel.csp.cloud.premier-ictc.com
+  #             - edge.cpanel.csp.cloud.premier-ictc.com
+  #             - cli.cpanel.csp.cloud.premier-ictc.com
   #     # middlewares:
   #     #   - securityHeaders@file
 
