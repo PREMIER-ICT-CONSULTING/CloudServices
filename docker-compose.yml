@@ -1,5 +1,10 @@
 version: '3'
 
+# networks:
+#   outside:
+#     external: true
+#     name: "${NETWORK_ID}"
+
 services:
   # docker_proxy:
   #   image: tecnativa/docker-socket-proxy
@@ -17,7 +22,7 @@ services:
   #       constraints:
   #         - node.role == manager
 
-  reverse-proxy:
+  reverse_proxy:
     # The official v2 Traefik docker image
     image: traefik:v2.10
     # Enables the web UI and tells Traefik to listen to docker
@@ -27,11 +32,21 @@ services:
       --providers.docker.swarmMode=true
       # --providers.docker.tls.insecureSkipVerify=true
       # --providers.docker.exposedByDefault=false
+    # networks:
+    #   - outside
     ports:
       # The HTTP port
-      - "80:80"
+      - target: 80
+        # host_ip: 0.0.0.0
+        published: "80"
+        # protocol: (tcp|udp)
+        mode: host
       # The Web UI (enabled by --api.insecure=true)
-      - "8080:8080"
+      - target: 8080
+        # host_ip: 0.0.0.0
+        published: "8080"
+        # protocol: (tcp|udp)
+        mode: host
     # volumes:
       # So that Traefik can listen to the Docker events
       # - /var/run/docker.sock:/var/run/docker.sock
