@@ -63,32 +63,210 @@ providers:
   providersThrottleDuration: 2s
 
   # File provider for connecting things that are outside of docker / defining middleware
-  file:
-    filename: ./control_plane.yml
-    watch: true
+  # file:
+  #   filename: ./control_plane.yml
+  #   watch: true
 
   # Docker provider for connecting all apps that are inside of the docker network
-  docker:
-    watch: true
-    network: control_plane_control_overlay # Add Your Docker Network Name Here
-    # Docker Standalone Mode
-    endpoint: "unix:///var/run/docker.sock"
-    # Docker Swarm Mode
-    endpoint: "tcp://docker_proxy:2375"
-    swarmMode: true    
-    # Default host rule to containername.domain.example
-    defaultRule: "Host(`{{ index .Labels \"com.docker.compose.service\"}}.cloud.premier-ictc.com`)"
-    swarmModeRefreshSeconds: 15s
-    exposedByDefault: false
+  # docker:
+  #   watch: true
+  #   network: control_plane_control_overlay # Add Your Docker Network Name Here
+  #   # Docker Standalone Mode
+  #   endpoint: "unix:///var/run/docker.sock"
+  #   # Docker Swarm Mode
+  #   # endpoint: "tcp://docker_proxy:2375"
+  #   # swarmMode: true
+  #   # Default host rule to containername.domain.example
+  #   defaultRule: "Host(`{{ index .Labels \"com.docker.compose.service\"}}.cloud.premier-ictc.com`)"
+  #   swarmModeRefreshSeconds: 15s
+  #   exposedByDefault: false
+
+  # Kubernetes
+  kubernetesIngress:
+    # endpoint: foobar
+    # token: foobar
+    # certAuthFilePath: foobar
+    # namespaces:
+    #   - foobar
+    #   - foobar
+    # labelSelector: foobar
+    # ingressClass: foobar
+    throttleDuration: 42s
+    # allowEmptyServices: true
+    # allowExternalNameServices: true
+    # ingressEndpoint:
+    #   ip: foobar
+    #   hostname: foobar
+    #   publishedService: foobar
+        
+  # kubernetesCRD:
+  #   endpoint: foobar
+  #   token: foobar
+  #   certAuthFilePath: foobar
+  #   namespaces:
+  #     - foobar
+  #     - foobar
+  #   allowCrossNamespace: true
+  #   allowExternalNameServices: true
+  #   labelSelector: foobar
+  #   ingressClass: foobar
+  #   throttleDuration: 42s
+  #   allowEmptyServices: true
+
+  # kubernetesGateway:
+  #   endpoint: foobar
+  #   token: foobar
+  #   certAuthFilePath: foobar
+  #   namespaces:
+  #     - foobar
+  #     - foobar
+  #   labelSelector: foobar
+  #   throttleDuration: 42s
 
 api:
   dashboard: true
   insecure: true
+  debug: true
+# metrics:
+#   prometheus:
+#     buckets:
+#       - 42
+#       - 42
+#     addEntryPointsLabels: true
+#     addRoutersLabels: true
+#     addServicesLabels: true
+#     entryPoint: foobar
+#     manualRouting: true
+#     headerLabels:
+#       label1: foobar
+#       label2: foobar
+#   datadog:
+#     address: foobar
+#     pushInterval: 42s
+#     addEntryPointsLabels: true
+#     addRoutersLabels: true
+#     addServicesLabels: true
+#     prefix: foobar
+#   statsD:
+#     address: foobar
+#     pushInterval: 42s
+#     addEntryPointsLabels: true
+#     addRoutersLabels: true
+#     addServicesLabels: true
+#     prefix: foobar
+#   influxDB:
+#     address: foobar
+#     protocol: foobar
+#     pushInterval: 42s
+#     database: foobar
+#     retentionPolicy: foobar
+#     username: foobar
+#     password: foobar
+#     addEntryPointsLabels: true
+#     addRoutersLabels: true
+#     addServicesLabels: true
+#     additionalLabels:
+#       name0: foobar
+#       name1: foobar
+#   influxDB2:
+#     address: foobar
+#     token: foobar
+#     pushInterval: 42s
+#     org: foobar
+#     bucket: foobar
+#     addEntryPointsLabels: true
+#     addRoutersLabels: true
+#     addServicesLabels: true
+#     additionalLabels:
+#       name0: foobar
+#       name1: foobar
+# ping:
+#   entryPoint: foobar
+#   manualRouting: true
+#   terminatingStatusCode: 42
 
 # Log level INFO|DEBUG|ERROR
 log:
-  level: INFO
+  level: DEBUG       # INFO
+  # filePath: foobar
+  # format: foobar
 
+# accessLog:
+#   filePath: foobar
+#   format: foobar
+#   filters:
+#     statusCodes:
+#       - foobar
+#       - foobar
+#     retryAttempts: true
+#     minDuration: 42s
+#   fields:
+#     defaultMode: foobar
+#     names:
+#       name0: foobar
+#       name1: foobar
+#     headers:
+#       defaultMode: foobar
+#       names:
+#         name0: foobar
+#         name1: foobar
+#   bufferingSize: 42
+
+# tracing:
+#   serviceName: foobar
+#   spanNameLimit: 42
+#   jaeger:
+#     samplingServerURL: foobar
+#     samplingType: foobar
+#     samplingParam: 42
+#     localAgentHostPort: foobar
+#     gen128Bit: true
+#     propagation: foobar
+#     traceContextHeaderName: foobar
+#     disableAttemptReconnecting: true
+#     collector:
+#       endpoint: foobar
+#       user: foobar
+#       password: foobar
+#   zipkin:
+#     httpEndpoint: foobar
+#     sameSpan: true
+#     id128Bit: true
+#     sampleRate: 42
+#   datadog:
+#     localAgentHostPort: foobar
+#     localAgentSocket: foobar
+#     globalTag: foobar
+#     globalTags:
+#       tag1: foobar
+#       tag2: foobar
+#     debug: true
+#     prioritySampling: true
+#     traceIDHeaderName: foobar
+#     parentIDHeaderName: foobar
+#     samplingPriorityHeaderName: foobar
+#     bagagePrefixHeaderName: foobar
+#   instana:
+#     localAgentHost: foobar
+#     localAgentPort: 42
+#     logLevel: foobar
+#     enableAutoProfile: true
+#   haystack:
+#     localAgentHost: foobar
+#     localAgentPort: 42
+#     globalTag: foobar
+#     traceIDHeaderName: foobar
+#     parentIDHeaderName: foobar
+#     spanIDHeaderName: foobar
+#     baggagePrefixHeaderName: foobar
+#   elastic:
+#     serverURL: foobar
+#     secretToken: foobar
+#     serviceEnvironment: foobar
+# hostResolver:
+#   cnameFlattening: true
+#   resolvConfig: foobar
+#   resolvDepth: 42
 
 # Use letsencrypt to generate ssl serficiates
 # certificatesResolvers:
@@ -102,3 +280,67 @@ log:
 #         # resolvers:
 #         #   - "1.1.1.1:53"
 #         #   - "1.0.0.1:53"
+
+#   CertificateResolver0:
+#     acme:
+#       email: foobar
+#       caServer: foobar
+#       certificatesDuration: 42
+#       preferredChain: foobar
+#       storage: foobar
+#       keyType: foobar
+#       eab:
+#         kid: foobar
+#         hmacEncoded: foobar
+#       dnsChallenge:
+#         provider: foobar
+#         delayBeforeCheck: 42s
+#         resolvers:
+#           - foobar
+#           - foobar
+#         disablePropagationCheck: true
+#       httpChallenge:
+#         entryPoint: foobar
+#       tlsChallenge: {}
+#   CertificateResolver1:
+#     acme:
+#       email: foobar
+#       caServer: foobar
+#       certificatesDuration: 42
+#       preferredChain: foobar
+#       storage: foobar
+#       keyType: foobar
+#       eab:
+#         kid: foobar
+#         hmacEncoded: foobar
+#       dnsChallenge:
+#         provider: foobar
+#         delayBeforeCheck: 42s
+#         resolvers:
+#           - foobar
+#           - foobar
+#         disablePropagationCheck: true
+#       httpChallenge:
+#         entryPoint: foobar
+#       tlsChallenge: {}
+# hub:
+#   tls:
+#     insecure: true
+#     ca: foobar
+#     cert: foobar
+#     key: foobar
+# experimental:
+#   kubernetesGateway: true
+#   http3: true
+#   plugins:
+#     Descriptor0:
+#       moduleName: foobar
+#       version: foobar
+#     Descriptor1:
+#       moduleName: foobar
+#       version: foobar
+#   localPlugins:
+#     Descriptor0:
+#       moduleName: foobar
+#     Descriptor1:
+#       moduleName: foobar
