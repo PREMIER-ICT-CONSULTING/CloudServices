@@ -1,7 +1,7 @@
 #!/bin/bash
 
 echo "\$1 = '$1'"
-if [ "$1" -eq " " ]
+if [ -z "$1" ]
 then
     KUBE_CTL = "microk8s kubectl"
 else
