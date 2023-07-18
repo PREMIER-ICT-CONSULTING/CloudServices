@@ -13,8 +13,8 @@ cd ./ns-control_plane/po-orchestrator &&  /
 
 
 echo "### Deploy 'ArgoCD Standalone' deployment into the 'control_plane' namespace... \n\n"
-cmd "$KUBE_CTL create namespace control_plane"
-cmd "$KUBE_CTL apply -n ns-control_plane -f ./ns-control_plane/po-orchestrator/install.yaml"
+cmd "$KUBE_CTL create namespace control_plane;"
+cmd "$KUBE_CTL apply -n ns-control_plane -f ./ns-control_plane/po-orchestrator/install.yaml;"
 
 # echo "### Create Ingress rule for 'ArgoCD Server' web UI via the FQDN... \n\n"
 # cmd "$KUBE_CTL create ingress --rule=\"cpanel.csp.cloud.premier-ictc.com/=svc1:80\" "
@@ -22,5 +22,3 @@ cmd "$KUBE_CTL apply -n ns-control_plane -f ./ns-control_plane/po-orchestrator/i
 # echo "### Deploy 'WhoAmI' pod into the 'control_plane' namespace... \n\n"
 # cmd "$KUBE_CTL create namespace whoami"
 # cmd "$KUBE_CTL apply -f ./ns-control_plane/po-testing -R"
-
-
