@@ -1,6 +1,0 @@
-[submodule "pods/odoo_ce-ccoba_kingston"]
-	path = pods/odoo_ce-ccoba_kingston
-	url = https://github.com/PREMIER-ICT-CONSULTING/docker-odoo_ce-ccoba_kingston.git
-[submodule "pods/odoo_ce-svcbs"]
-	path = pods/odoo_ce-svcbs
-	url = https://github.com/PREMIER-ICT-CONSULTING/docker-odoo_ce-svcbs.git
