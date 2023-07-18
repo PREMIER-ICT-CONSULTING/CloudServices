@@ -32,11 +32,11 @@ do
     * )
       if [ -z "$@" ]
       then
-        KUBE_CTL="kubectl"
-      else
-        echo "Invalid arguments '$@', Try:"
         echo ""
         echo "$USAGE"
+        echo "Invalid arguments '$@', Try:"
+      else
+        KUBE_CTL="kubectl"
       fi
       break
       ;;
