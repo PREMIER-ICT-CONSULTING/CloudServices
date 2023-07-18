@@ -81,7 +81,7 @@ providers:
   #   swarmModeRefreshSeconds: 15s
   #   exposedByDefault: false
 
-  # Kubernetes
+  # Kubernetes provider for connecting all apps that are inside of the k8s cluster
   kubernetesIngress:
     # endpoint: foobar
     # token: foobar
@@ -91,11 +91,11 @@ providers:
     #   - foobar
     # labelSelector: foobar
     # ingressClass: foobar
-    throttleDuration: 42s
+    # throttleDuration: 42s
     # allowEmptyServices: true
     # allowExternalNameServices: true
-    # ingressEndpoint:
-    #   ip: foobar
+    ingressEndpoint:
+      ip: 127.0.0.1:8001
     #   hostname: foobar
     #   publishedService: foobar
         
