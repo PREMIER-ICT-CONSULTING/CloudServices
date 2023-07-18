@@ -29,6 +29,7 @@ do
     * )
       if  [ !$@ ]
       then
+<<<<<<< HEAD
         KUBE_CTL="kubectl"
         echo ""
         echo "Using default 'kubectl' command set!"
@@ -41,6 +42,13 @@ do
         echo ""
         echo "$USAGE"
         exit 2
+=======
+        echo ""
+        echo "$USAGE"
+        echo "Invalid arguments '$@', Try:"
+      else
+        KUBE_CTL="kubectl"
+>>>>>>> df6a4c0e42ed2a08c92207e69b5eb5f3b4dff329
       fi
       ;;
   esac
