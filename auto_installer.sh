@@ -8,4 +8,3 @@ else
 
 
 echo "### Download Latest ArgoCD Standalone config file... \n\n"
-eval "cd ./control_plane/orchestrator && wget \"https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml\" "
