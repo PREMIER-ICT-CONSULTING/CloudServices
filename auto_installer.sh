@@ -49,6 +49,8 @@ do
 done
 
 echo ""
+echo " 'k8s clt' tool set to '$KUBE_CTL' "
+echo ""
 
 eval "git config --global user.name ""PICTC"" "
 eval "git config --global user.email ""support@premier-ictc.com"" "
