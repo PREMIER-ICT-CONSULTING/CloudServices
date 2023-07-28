@@ -1,5 +1,8 @@
 #!/bin/bash
 
+ARGOCD_SA_INSTALLER="https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml"
+ARGOCD_HA_INSTALLER="https://github.com/argoproj/argo-cd/blob/master/manifests/ha/install.yaml"
+
 SHORT=k,h
 LONG=kubectl-cmds,help
 OPTS=$(getopt -a -n auto_installer.sh --options $SHORT --longoptions $LONG -- "$@")
@@ -40,20 +43,26 @@ done
 K8S_CTL_VER=$(eval "$KUBE_CTL version ")
 echo -e " [$KUBE_CTL version] = '$K8S_CTL_VER' \n"
 
-if [ -n "$K8S_CTL_VER" ] ;
+if [ -z "$K8S_CTL_VER" ] ;
 then
-  echo -e "Could not verify that the '$KUBE_CTL' tools are intalled or accessable on the default path..."
-  echo -e "\nDo you wish to proceed with the installation attempt?"
+  echo -e "Could not verify that the '$KUBE_CTL' tools are intalled or accessable on the default path...\n"
+  # echo -e "\nDo you wish to proceed with the installation attempt?"
 
-  while IFS='Do you wish to proceed with the installation attempt sadadvdy ' read -r yn
+  while IFS=: read -p "Do you wish to proceed with the installation attempt anyways? (y|N) : " -r yn
     do
       case $yn in
-        [Yy]* ) 
+        [Yy]* )
+          echo -e "\n"
           break
           ;;
 
         [Nn]* ) 
-          echo -e "\n\nUser aborted the installation?"
+          echo -e "\nUser aborted the installation?"
+          exit 1
+          ;;
+
+        * )
+          echo -e "\nUser aborted the installation?"
           exit 1
           ;;
 
@@ -62,39 +71,70 @@ then
 
 fi
 
-echo "[Debug] Logging: 'Exit 0'"
-exit 0
 
-while : 
+while IFS=: read -p "Do you wish to install 'ARGO CD' in High Availaility deployment? (y|n) : " -r yn
   do
-    read -p "Do you wish to check online for an updated install script? (y|n) " yn
     case $yn in
       [Yy]* )
-        echo -e "\n### Download Latest ArgoCD Standalone config file... \n\n"
-        eval "cd ./control_plane/orchestrator && wget 'https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml'"
+        # echo -e "\n### Install latest ArgoCD Standalone config file... \n\n"
+        ARGOCD_INSTALLER=$ARGOCD_HA_INSTALLER
+        INSTALLER_SCRIPT="install.yaml"
         break
         ;;
+      
+      [Nn]* )
+        ARGOCD_INSTALLER=$ARGOCD_SA_INSTALLER
+        INSTALLER_SCRIPT="install_ha.yaml"
+        break
+        ;;
+      
+      * )
+        echo -e "Please answer (Y|y) or yes or (N|n) for no..."
+        ;;
+      
+  esac
+done
+
+
+while IFS=: read -p "Do you wish to check online for an updated install script? (y|n) : " -r yn
+  do
+    case $yn in
+      [Yy]* )
+        eval "mv ./control_plane/orchestrator/$INSTALLER_SCRIPT ./control_plane/orchestrator/$INSTALLER_SCRIPT.old"
+        echo -e "\n### Download Latest ArgoCD Standalone config file... \n\n"
+        eval "cd ./control_plane/orchestrator && /
+            wget '$ARGOCD_INSTALLER' "
+        break
+        ;;
+      
       [Nn]* )
         break
         ;;
+      
       * )
-        echo -e "Please answer (Y|y) or yes or (N|n) for no."
+        echo -e "Please answer (Y|y) or yes or (N|n) for no..."
         ;;
+      
   esac
 done
+
 
 # eval "git config --global user.name ""PICTC"" "
 # eval "git config --global user.email ""support@premier-ictc.com"" "
 
+echo -e "\n### Deploy 'ArgoCD Standalone' deployment into the 'control_plane' namespace... \n\n"
+eval "$KUBE_CTL create namespace control_plane;"
+eval "$KUBE_CTL apply -n control_plane -f ./control_plane/orchestrator/$INSTALLER_SCRIPT"
 
+echo -e "\n### Deploy 'Traefik' pod into the 'control_plane' namespace... \n\n"
+eval "$KUBE_CTL apply -n control_plane -f ./control_plane/reverse_proxy -R"
 
-# echo "### Deploy 'ArgoCD Standalone' deployment into the 'control_plane' namespace... \n\n"
-# eval "$KUBE_CTL create namespace control_plane;"
-# eval "$KUBE_CTL apply -n ns-control_plane -f ./ns-control_plane/po-orchestrator/install.yaml"
+echo -e "\n### Deploy 'WhoAmI' pod into the 'whoami' namespace... \n\n"
+eval "$KUBE_CTL create namespace whoami"
+eval "$KUBE_CTL apply -n whoami -f ./control_plane/testing -R"
 
-# echo "### Create Ingress rule for 'ArgoCD Server' web UI via the FQDN... \n\n"
-# eval "$KUBE_CTL create ingress --rule=\"cpanel.csp.cloud.premier-ictc.com/=svc1:80\" "
+echo -e "\n### Create Ingress rule for 'ArgoCD Server' web UI via the FQDN... \n\n"
+eval "$KUBE_CTL create ingress --rule=\"cpanel.csp.cloud.premier-ictc.com/=svc1:80\" "
 
-# echo "### Deploy 'WhoAmI' pod into the 'control_plane' namespace... \n\n"
-# eval "$KUBE_CTL create namespace whoami"
-# eval "$KUBE_CTL apply -f ./ns-control_plane/po-testing -R"
+echo -e "\n[Debug] Logging: 'Successful installation!'"
+exit 0
