@@ -140,7 +140,7 @@ echo -e "\n### Create Ingress rule for 'ArgoCD Server' web UI via the FQDN... \n
 eval "$KUBE_CTL create ingress public --class=default \
         --rule=""*.csp.cloud.premier-ictc.com/=traefik-web-service:80"" \
         --rule=""*.cloud.premier-ictc.com/=traefik-web-service:80"" \
-        --rule=""cpanel.cloud.premier-ictc.com/=traefik-dashboard-service:8080"" "
+        --rule=""cpanel.csp.cloud.premier-ictc.com/=traefik-dashboard-service:8080"" "
 
 echo -e "\n[Debug] Logging: 'Successful installation!'"
 exit 0
