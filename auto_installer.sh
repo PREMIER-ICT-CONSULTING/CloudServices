@@ -101,7 +101,7 @@ while IFS=: read -p "Do you wish to check online for an updated install script? 
   do
     case $yn in
       [Yy]* )
-        eval "mv -y $HOME_DIR/control_plane/orchestrator/$INSTALLER_SCRIPT $HOME_DIR/control_plane/orchestrator/$INSTALLER_SCRIPT.old"
+        eval "mv -f $HOME_DIR/control_plane/orchestrator/$INSTALLER_SCRIPT $HOME_DIR/control_plane/orchestrator/$INSTALLER_SCRIPT.old"
         echo -e "\n### Download Latest ArgoCD Standalone config file... \n\n"
         eval "cd $HOME_DIR/control_plane/orchestrator && /
             wget '$ARGOCD_INSTALLER' "
