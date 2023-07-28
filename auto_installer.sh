@@ -125,16 +125,16 @@ done
 
 eval "cd $HOME_DIR"
 
-echo -e "\n### Deploy 'ArgoCD Standalone' deployment into the 'controlplane' namespace... \n\n"
-eval "$KUBE_CTL create namespace controlplane;"
-eval "$KUBE_CTL apply -n controlplane -f $HOME_DIR/control_plane/orchestrator/$INSTALLER_SCRIPT"
+echo -e "\n### Deploy 'ArgoCD'- Standalone deployment into the 'control-plane' namespace... \n\n"
+eval "$KUBE_CTL create namespace control-plane;"
+eval "$KUBE_CTL apply -n control-plane -f $HOME_DIR/control_plane/orchestrator/$INSTALLER_SCRIPT"
 
-echo -e "\n### Deploy 'Traefik' pod into the 'controlplane' namespace... \n\n"
-eval "$KUBE_CTL apply -n controlplane -f $HOME_DIR/control_plane/reverse_proxy -R"
+echo -e "\n### Deploy 'Traefik' pod into the 'control-plane' namespace... \n\n"
+eval "$KUBE_CTL apply -n control-plane -f $HOME_DIR/control_plane/reverse_proxy -R"
 
-echo -e "\n### Deploy 'WhoAmI' pod into the 'whoami' namespace... \n\n"
-eval "$KUBE_CTL create namespace whoami"
-eval "$KUBE_CTL apply -n whoami -f $HOME_DIR/control_plane/testing -R"
+echo -e "\n### Deploy 'whoami' pod into the 'control-plane' namespace... \n\n"
+# eval "$KUBE_CTL create namespace whoami"
+eval "$KUBE_CTL apply -n control-plane -f $HOME_DIR/control_plane/testing -R"
 
 echo -e "\n### Create Ingress rule for 'ArgoCD Server' web UI via the FQDN... \n\n"
 eval "$KUBE_CTL create ingress public --class=default \
