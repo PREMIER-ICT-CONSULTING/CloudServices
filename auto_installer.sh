@@ -1,5 +1,6 @@
 #!/bin/bash
 
+HOME_DIR=$(eval "pwd")
 ARGOCD_SA_INSTALLER="https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml"
 ARGOCD_HA_INSTALLER="https://github.com/argoproj/argo-cd/blob/master/manifests/ha/install.yaml"
 
@@ -100,9 +101,9 @@ while IFS=: read -p "Do you wish to check online for an updated install script? 
   do
     case $yn in
       [Yy]* )
-        eval "mv -y ./control_plane/orchestrator/$INSTALLER_SCRIPT ./control_plane/orchestrator/$INSTALLER_SCRIPT.old"
+        eval "mv -y $HOME_DIR/control_plane/orchestrator/$INSTALLER_SCRIPT $HOME_DIR/control_plane/orchestrator/$INSTALLER_SCRIPT.old"
         echo -e "\n### Download Latest ArgoCD Standalone config file... \n\n"
-        eval "cd ./control_plane/orchestrator && /
+        eval "cd $HOME_DIR/control_plane/orchestrator && /
             wget '$ARGOCD_INSTALLER' "
         break
         ;;
@@ -122,16 +123,18 @@ done
 # eval "git config --global user.name ""PICTC"" "
 # eval "git config --global user.email ""support@premier-ictc.com"" "
 
+eval "cd $HOME_DIR"
+
 echo -e "\n### Deploy 'ArgoCD Standalone' deployment into the 'controlplane' namespace... \n\n"
 eval "$KUBE_CTL create namespace controlplane;"
-eval "$KUBE_CTL apply -n controlplane -f ./control_plane/orchestrator/$INSTALLER_SCRIPT"
+eval "$KUBE_CTL apply -n controlplane -f $HOME_DIR/control_plane/orchestrator/$INSTALLER_SCRIPT"
 
 echo -e "\n### Deploy 'Traefik' pod into the 'controlplane' namespace... \n\n"
-eval "$KUBE_CTL apply -n controlplane -f ./control_plane/reverse_proxy -R"
+eval "$KUBE_CTL apply -n controlplane -f $HOME_DIR/control_plane/reverse_proxy -R"
 
 echo -e "\n### Deploy 'WhoAmI' pod into the 'whoami' namespace... \n\n"
 eval "$KUBE_CTL create namespace whoami"
-eval "$KUBE_CTL apply -n whoami -f ./control_plane/testing -R"
+eval "$KUBE_CTL apply -n whoami -f $HOME_DIR/control_plane/testing -R"
 
 echo -e "\n### Create Ingress rule for 'ArgoCD Server' web UI via the FQDN... \n\n"
 eval "$KUBE_CTL create ingress public --class=default \
