@@ -78,13 +78,13 @@ while IFS=: read -p "Do you wish to install 'ARGO CD' in High Availaility deploy
       [Yy]* )
         # echo -e "\n### Install latest ArgoCD Standalone config file... \n\n"
         ARGOCD_INSTALLER=$ARGOCD_HA_INSTALLER
-        INSTALLER_SCRIPT="install.yaml"
+        INSTALLER_SCRIPT="install_ha.yaml"
         break
         ;;
       
       [Nn]* )
         ARGOCD_INSTALLER=$ARGOCD_SA_INSTALLER
-        INSTALLER_SCRIPT="install_ha.yaml"
+        INSTALLER_SCRIPT="install.yaml"
         break
         ;;
       
@@ -100,7 +100,7 @@ while IFS=: read -p "Do you wish to check online for an updated install script? 
   do
     case $yn in
       [Yy]* )
-        eval "mv ./control_plane/orchestrator/$INSTALLER_SCRIPT ./control_plane/orchestrator/$INSTALLER_SCRIPT.old"
+        eval "mv -y ./control_plane/orchestrator/$INSTALLER_SCRIPT ./control_plane/orchestrator/$INSTALLER_SCRIPT.old"
         echo -e "\n### Download Latest ArgoCD Standalone config file... \n\n"
         eval "cd ./control_plane/orchestrator && /
             wget '$ARGOCD_INSTALLER' "
@@ -122,12 +122,12 @@ done
 # eval "git config --global user.name ""PICTC"" "
 # eval "git config --global user.email ""support@premier-ictc.com"" "
 
-echo -e "\n### Deploy 'ArgoCD Standalone' deployment into the 'control_plane' namespace... \n\n"
-eval "$KUBE_CTL create namespace control_plane;"
-eval "$KUBE_CTL apply -n control_plane -f ./control_plane/orchestrator/$INSTALLER_SCRIPT"
+echo -e "\n### Deploy 'ArgoCD Standalone' deployment into the 'controlplane' namespace... \n\n"
+eval "$KUBE_CTL create namespace controlplane;"
+eval "$KUBE_CTL apply -n controlplane -f ./control_plane/orchestrator/$INSTALLER_SCRIPT"
 
-echo -e "\n### Deploy 'Traefik' pod into the 'control_plane' namespace... \n\n"
-eval "$KUBE_CTL apply -n control_plane -f ./control_plane/reverse_proxy -R"
+echo -e "\n### Deploy 'Traefik' pod into the 'controlplane' namespace... \n\n"
+eval "$KUBE_CTL apply -n controlplane -f ./control_plane/reverse_proxy -R"
 
 echo -e "\n### Deploy 'WhoAmI' pod into the 'whoami' namespace... \n\n"
 eval "$KUBE_CTL create namespace whoami"
