@@ -14,17 +14,12 @@ do
     -k | --kubectl-cmds )
       shift 2;
       KUBE_CTL="$@"
-      echo ""
-      echo "Using the '$KUBE_CTL' K8s control command line tools!"
-      echo ""
+      echo -e "\nUsing the '$KUBE_CTL' K8s control command line tools!\n"
       break
       ;;
 
     -h | --help )
-      echo "Auto deployment using 'kubectl' or some other K8s ctl command tool. "
-      echo ""
-      echo "$USAGE"
-      echo ""
+      echo -e "Auto deployment using 'kubectl' or some other K8s ctl command tool. \n$USAGE\n"
       exit 0
       ;;
 
@@ -32,41 +27,36 @@ do
       if [ !$@ ]
       then
         KUBE_CTL="kubectl"
-        echo ""
-        echo "Using default '$KUBE_CTL' command set!"
-        echo ""
+        echo -e "\nUsing default '$KUBE_CTL' command set!\n"
         break
       else
-        echo ""
-        echo "Invalid arguments '$@', Try:"
-        echo ""
-        echo "$USAGE"
-        echo ""
+        echo -e "\nInvalid arguments '$@', Try:\n$USAGE\n"
       fi
       ;;
 
   esac
 done
 
-K8S_CTL_VER=$(eval "$KUBE_CTL version | grep -e '([:digit:])' ")
-echo " [$KUBE_CTL version] = '$K8S_CTL_VER'"
-echo ""
+K8S_CTL_VER=$(eval "$KUBE_CTL version ")
+echo -e " [$KUBE_CTL version] = '$K8S_CTL_VER' \n"
 
-if [ $K8S_CTL_VER eq 0 ]
+if [ -n "$K8S_CTL_VER" ] ;
 then
-  echo "Could not verify that the '$KUBE_CTL' tools ae intalled on aviliable for the default path..."
-  echo ""
-  echo "Do you wish to proceed with the installation attempt?"
+  echo -e "Could not verify that the '$KUBE_CTL' tools are intalled or accessable on the default path..."
+  echo -e "\nDo you wish to proceed with the installation attempt?"
 
-  select yn in "Yes" "No"; 
+  while IFS='Do you wish to proceed with the installation attempt sadadvdy ' read -r yn
     do
       case $yn in
         [Yy]* ) 
           break
           ;;
+
         [Nn]* ) 
-          exit 0
+          echo -e "\n\nUser aborted the installation?"
+          exit 1
           ;;
+
     esac
   done
 
@@ -75,13 +65,12 @@ fi
 echo "[Debug] Logging: 'Exit 0'"
 exit 0
 
-while true; 
+while : 
   do
-    read -p "Do you wish to check online for an updated install script? (y|n)" yn
+    read -p "Do you wish to check online for an updated install script? (y|n) " yn
     case $yn in
       [Yy]* )
-        echo ""
-        echo "### Download Latest ArgoCD Standalone config file... \n\n"
+        echo -e "\n### Download Latest ArgoCD Standalone config file... \n\n"
         eval "cd ./control_plane/orchestrator && wget 'https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml'"
         break
         ;;
@@ -89,7 +78,7 @@ while true;
         break
         ;;
       * )
-        echo "Please answer (Y|y) or yes or (N|n) for no."
+        echo -e "Please answer (Y|y) or yes or (N|n) for no."
         ;;
   esac
 done
