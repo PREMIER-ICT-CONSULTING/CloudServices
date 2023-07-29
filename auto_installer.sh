@@ -136,12 +136,12 @@ echo -e "\n### Deploy 'whoami' pod into the 'control-plane' namespace... \n\n"
 # eval "$KUBE_CTL create namespace whoami"
 eval "$KUBE_CTL apply -n control-plane -f $HOME_DIR/control_plane/testing -R"
 
-echo -e "\n### Create Ingress rule for 'ArgoCD Services' web UI via the FQDN... \n\n"
-eval "$KUBE_CTL create ingress public --class=default \
-        --rule=""cpanel.csp.cloud.premier-ictc.com/=argocd-server:80"" "
+# echo -e "\n### Create Ingress rule for 'ArgoCD Services' web UI via the FQDN... \n\n"
+# eval "$KUBE_CTL create ingress public --class=default \
+#         --rule=""cpanel.csp.cloud.premier-ictc.com/=argocd-server:80"" "
 
-echo -e "\n### Create Expose rule for 'Traefik Deployment' web UI traffic via port 80 ... \n\n"
-eval "$KUBE_CTL expose deployment argocd-server --port=80 --target-port=80 "
+# echo -e "\n### Create Expose rule for 'Traefik Deployment' web UI traffic via port 80 ... \n\n"
+# eval "$KUBE_CTL expose deployment argocd-server --port=80 --target-port=80 "
 
 echo -e "\n[Debug] Logging: 'Successful installation!'"
 exit 0
