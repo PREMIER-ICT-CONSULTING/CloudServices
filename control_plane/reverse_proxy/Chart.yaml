@@ -1,0 +1,41 @@
+apiVersion: v2
+name: traefik
+description: A Traefik based Kubernetes ingress controller
+type: application
+version: 23.2.0
+# renovate: image=traefik
+appVersion: v2.10.4
+kubeVersion: ">=1.16.0-0"
+keywords:
+  - traefik
+  - ingress
+  - networking
+home: https://traefik.io/
+sources:
+  - https://github.com/traefik/traefik
+  - https://github.com/traefik/traefik-helm-chart
+maintainers:
+  - name: emilevauge
+    email: emile@vauge.com
+  - name: dtomcej
+    email: daniel.tomcej@gmail.com
+  - name: ldez
+    email: ldez@traefik.io
+  - name: mloiseleur
+    email: michel.loiseleur@traefik.io
+  - name: charlie-haley
+    email: charlie.haley@traefik.io
+icon: https://raw.githubusercontent.com/traefik/traefik/v2.3/docs/content/assets/img/traefik.logo.png
+annotations:
+  artifacthub.io/changes: |
+    - "release: :rocket: publish v23.2.0"
+    - "feat: ✨ add support for traefik v3.0.0-beta3 and openTelemetry"
+    - "feat: add pod_name as default in values.yaml"
+    - "fix: ingressclass name should be customizable (#864)"
+    - "chore(deps): update traefik docker tag to v2.10.4"
+    - "fix: 🐛 traefik or metrics port can be disabled"
+    - "feat: disable allowPrivilegeEscalation"
+    - "fix: 🐛 update traefik.containo.us CRDs to v2.10"
+    - "chore(tests): 🔧 use more accurate asserts on refactor'd isNull test"
+    - "chore(deps): update docker.io/helmunittest/helm-unittest docker tag to v3.11.3"
+    - "⬆️ Upgrade traefik Docker tag to v2.10.3"
