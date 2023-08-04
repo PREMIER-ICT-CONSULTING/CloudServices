@@ -1,0 +1,3 @@
+{{- if not .Values.libraryMode }}
+{{- include "codefresh-tunnel-client.deployment" . }}
+{{- end }}

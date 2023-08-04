@@ -1,0 +1,110 @@
+{{- define "cap-app-proxy.resources.deployment" }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "cap-app-proxy.fullname" . }}
+  labels:
+    {{- include "cap-app-proxy.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "cap-app-proxy.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "cap-app-proxy.selectorLabels" . | nindent 8 }}
+        {{- with .Values.podLabels }}
+          {{- toYaml . | nindent 8 }}
+        {{- end }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "cap-app-proxy.serviceAccountName" . }}
+      securityContext:
+      {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      initContainers:
+      - name: init
+        image: "{{ .Values.initContainer.image.repository }}:{{ .Values.initContainer.image.tag }}"
+        {{- include "cap-app-proxy.environment-variables.init-container" . | nindent 8}}
+        imagePullPolicy: {{ .Values.initContainer.image.pullPolicy }}
+        command:
+          {{- toYaml .Values.initContainer.command | nindent 8 }}
+        volumeMounts:
+        {{- with .Values.initContainer.extraVolumeMounts }}
+          {{- toYaml . | nindent 10 }}
+        {{- end }}
+          - mountPath: /app/config/git-tls-certs
+            name: git-tls-certs
+            readOnly: true
+          - mountPath: /app/config/all
+            name: all-certs
+        resources:
+          {{- toYaml .Values.initContainer.resources | nindent 12 }}
+      containers:
+      - name: 'cap-app-proxy'
+        securityContext:
+          {{- toYaml .Values.securityContext | nindent 12 }}
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        {{- include "cap-app-proxy.environment-variables" . | nindent 8}}
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        ports:
+        - name: http
+          containerPort: 8080
+        readinessProbe:
+          initialDelaySeconds: {{ .Values.readinessProbe.initialDelaySeconds }}
+          periodSeconds: {{ .Values.readinessProbe.periodSeconds }}
+          timeoutSeconds: {{ .Values.readinessProbe.timeoutSeconds }}
+          successThreshold: {{ .Values.readinessProbe.successThreshold }}
+          failureThreshold: {{ .Values.readinessProbe.failureThreshold }}
+          httpGet:
+            port: http
+            path: /api/readyz
+        livenessProbe:
+          initialDelaySeconds: {{ .Values.livenessProbe.initialDelaySeconds }}
+          periodSeconds: {{ .Values.livenessProbe.periodSeconds }}
+          timeoutSeconds: {{ .Values.livenessProbe.timeoutSeconds }}
+          successThreshold: {{ .Values.livenessProbe.successThreshold }}
+          failureThreshold: {{ .Values.livenessProbe.failureThreshold }}
+          httpGet:
+            port: http
+            path: /api/healthz
+        resources:
+          {{- toYaml .Values.resources | nindent 12 }}
+        volumeMounts:
+        {{- with .Values.extraVolumeMounts }}
+          {{- toYaml . | nindent 8 }}
+        {{- end }}
+        - mountPath: /app/config/all
+          name: all-certs
+          readOnly: true
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8}}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 6 }}
+      {{- end }}
+      volumes:
+      {{- with .Values.extraVolumes }}
+          {{- toYaml . | nindent 6 }}
+      {{- end }}
+      - name: git-tls-certs
+        secret:
+          secretName: codefresh-workflow-pipelines-tls
+          defaultMode: 420
+          optional: true
+      - name: all-certs
+        emptyDir: {}
+{{- end }}

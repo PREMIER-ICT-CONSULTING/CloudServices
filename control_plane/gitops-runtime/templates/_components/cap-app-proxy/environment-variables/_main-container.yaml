@@ -1,0 +1,215 @@
+{{- define "cap-app-proxy.environment-variables.defaults" -}}
+ARGO_CD_URL:
+  valueFrom:
+    configMapKeyRef:
+      name: cap-app-proxy-cm
+      key: argoCdUrl
+      optional: true
+ARGO_CD_USERNAME:
+  valueFrom:
+    configMapKeyRef:
+      name: cap-app-proxy-cm
+      key: argoCdUsername
+      optional: true
+ARGO_CD_PASSWORD:
+  valueFrom:
+    secretKeyRef:
+      name: argocd-initial-admin-secret
+      key: password
+ARGO_WORKFLOWS_INSECURE:
+  valueFrom:
+    configMapKeyRef:
+      name: cap-app-proxy-cm
+      key: argoWorkflowsInsecure
+      optional: true
+ARGO_WORKFLOWS_URL:
+  valueFrom:
+    configMapKeyRef:
+      name: cap-app-proxy-cm
+      key: argoWorkflowsUrl
+      optional: true
+CHART_VERSION: {{ .Chart.Version }}
+CF_HOST:
+  valueFrom:
+    configMapKeyRef:
+      name: codefresh-cm
+      key: base-url
+      optional: true
+CLUSTER: https://kubernetes.default.svc
+CORS:
+  valueFrom:
+    configMapKeyRef:
+      name: cap-app-proxy-cm
+      key: cors
+      optional: true
+DEPLOYMENT_NAME: {{ include "cap-app-proxy.fullname" . }}
+ENV:
+  valueFrom:
+    configMapKeyRef:
+      name: cap-app-proxy-cm
+      key: env
+      optional: true
+GRAPHQL_DEBUG:
+  valueFrom:
+    configMapKeyRef:
+      name: cap-app-proxy-cm
+      key: graphqlDebug
+      optional: true
+GRAPHQL_PLAYGROUND:
+  valueFrom:
+    configMapKeyRef:
+      name: cap-app-proxy-cm
+      key: graphqlPlayground
+      optional: true
+INGRESS_CLASS_NAME: 
+  valueFrom:
+    configMapKeyRef:
+      name: codefresh-cm
+      key: ingressClassName
+INGRESS_CONTROLLER: 
+  valueFrom:
+    configMapKeyRef:
+      name: codefresh-cm
+      key: ingressController
+INGRESS_HOST: 
+  valueFrom:
+    configMapKeyRef:
+      name: codefresh-cm
+      key: ingressHost
+INSTALLATION_TYPE: HELM
+MANAGED: '"false"'
+NAMESPACE:
+  valueFrom:
+    fieldRef:
+      fieldPath: metadata.namespace
+PART_OF_VALUE: app-proxy
+PORT:
+  valueFrom:
+    configMapKeyRef:
+      name: cap-app-proxy-cm
+      key: port
+      optional: true
+REPOS_DIR:
+  valueFrom:
+    configMapKeyRef:
+      name: cap-app-proxy-cm
+      key: reposDir
+      optional: true
+RUNTIME_NAME:
+  valueFrom:
+    configMapKeyRef:
+      name: cap-app-proxy-cm
+      key: runtimeName
+RUNTIME_TOKEN:
+  valueFrom:
+    secretKeyRef:
+      name: codefresh-token
+      key: token
+      optional: true
+RUNTIME_STORE_IV:
+  valueFrom:
+    secretKeyRef:
+      name: codefresh-token
+      key: encryptionIV
+      optional: true
+RUNTIME_VERSION:
+  valueFrom:
+    configMapKeyRef:
+      name: codefresh-cm
+      key: version
+STORE_BACKEND:
+  valueFrom:
+    configMapKeyRef:
+      name: cap-app-proxy-cm
+      key: storeBackend
+      optional: true
+STRIP_PREFIX:
+  valueFrom:
+    configMapKeyRef:
+      name: cap-app-proxy-cm
+      key: stripPrefix
+      optional: true
+SKIP_PERMISSIONS_VALIDATION:
+  valueFrom:
+    configMapKeyRef:
+      name: cap-app-proxy-cm
+      key: skipGitPermissionValidation
+      optional: true
+LOG_LEVEL:
+  valueFrom:
+    configMapKeyRef:
+      name: cap-app-proxy-cm
+      key: logLevel
+      optional: true
+IRW_SERVICE_ACCOUNT:
+  valueFrom:
+    configMapKeyRef:
+      name: cap-app-proxy-cm
+      key: enrichmentServiceAccountName
+      optional: true
+IRW_CONCURRENCY_CM_NAME:
+  valueFrom:
+    configMapKeyRef:
+      name: cap-app-proxy-cm
+      key: enrichmentConcurrencyCmName
+      optional: true
+IRW_CONCURRENCY_CM_KEY:
+  valueFrom:
+    configMapKeyRef:
+      name: cap-app-proxy-cm
+      key: enrichmentConcurrencyCmKey
+      optional: true
+IRW_POD_GC_STRATEGY:
+  valueFrom:
+    configMapKeyRef:
+      name: cap-app-proxy-cm
+      key: enrichmentPodGcStrategy
+      optional: true
+IRW_TTL_AFTER_COMPLETION_IN_SECONDS:
+  valueFrom:
+    configMapKeyRef:
+      name: cap-app-proxy-cm
+      key: enrichmentTtlAfterCompletionInSeconds
+      optional: true
+IRW_TTL_ACTIVE_IN_SECONDS:
+  valueFrom:
+    configMapKeyRef:
+      name: cap-app-proxy-cm
+      key: enrichmentTtlActiveInSeconds
+      optional: true
+IRW_HEARTBEAT_INTERVAL_IN_SECONDS:
+  valueFrom:
+    configMapKeyRef:
+      name: cap-app-proxy-cm
+      key: enrichmentClientHeartbeatIntervalInSeconds
+      optional: true
+IRW_REPORT_IMAGE_TASK_IMAGE:
+  valueFrom:
+    configMapKeyRef:
+      name: cap-app-proxy-cm
+      key: enrichmentImageReportingImage
+      optional: true
+IRW_GIT_ENRICHMENT_TASK_IMAGE:
+  valueFrom:
+    configMapKeyRef:
+      name: cap-app-proxy-cm
+      key: enrichmentGitEnrichmentImage
+      optional: true
+IRW_JIRA_ENRICHMENT_TASK_IMAGE:
+  valueFrom:
+    configMapKeyRef:
+      name: cap-app-proxy-cm
+      key: enrichmentJiraEnrichmentImage
+      optional: true
+NODE_EXTRA_CA_CERTS: /app/config/all/all.cer
+{{- end -}}
+
+{{/*
+Read defaults from the template above and merge with the values provided in values file
+*/}}
+{{- define "cap-app-proxy.environment-variables" -}}
+{{- $defaults := (include "cap-app-proxy.environment-variables.defaults" . | fromYaml ) }}
+{{- $overrides := .Values.env }}
+{{- $mergedValues := mergeOverwrite $defaults $overrides }}
+{{- include "codefresh-gitops-runtime.components.common_helpers.container-templates.env-vars" $mergedValues }}
+{{- end -}}

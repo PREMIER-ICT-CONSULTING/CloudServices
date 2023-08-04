@@ -1,0 +1,24 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: cleanup-runtime-resources
+  annotations:
+    "helm.sh/hook": pre-delete
+    "helm.sh/hook-delete-policy": hook-succeeded,before-hook-creation
+spec:
+  backoffLimit: 3
+  template:
+    spec:
+      serviceAccount: argocd-application-controller
+      restartPolicy: Never
+      containers:
+      - name: cleanup-runtime-resources
+        image: "{{ .Values.installer.image.repository }}:{{ .Values.installer.image.tag | default .Chart.Version }}"
+        imagePullPolicy: {{ .Values.installer.image.pullPolicy }}
+        command: ["sh", "-c"]
+        args: 
+        - |
+          kubectl patch EventBus $(kubectl get eventbus -l codefresh.io/internal=true | awk 'NR>1{print $1}' | xargs) -p '{"metadata":{"finalizers":null}}' --type=merge && \
+          kubectl patch Eventsource $(kubectl get EventSource -l codefresh.io/internal=true | awk 'NR>1{print $1}' | xargs) -p '{"metadata":{"finalizers":null}}' --type=merge && \
+          kubectl patch Sensor $(kubectl get Sensor -l codefresh.io/internal=true | awk 'NR>1{print $1}' | xargs) -p '{"metadata":{"finalizers":null}}' --type=merge ;
+          return 0

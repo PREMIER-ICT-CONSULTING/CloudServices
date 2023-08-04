@@ -1,0 +1,25 @@
+{{- define "event-reporters.workflow-reporter.sensor"}}
+apiVersion: argoproj.io/v1alpha1
+kind: Sensor
+metadata:
+  name: workflow-reporter
+  labels:
+    {{- include "event-reporters.workflow-reporter.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.workflow.sensor.replicas }}
+  dependencies:
+    - eventName: workflows
+      eventSourceName: workflow-reporter
+      name: workflows
+  eventBusName: {{ default "codefresh-eventbus" .Values.global.runtime.eventBus.name }}
+  template:
+    serviceAccountName: {{ include "event-reporters.workflow-reporter.serviceAccountName" .}}
+    container:
+      name: ""
+      resources:
+      {{- with .Values.workflow.sensor.resources  }}
+        {{- . | toYaml | nindent 8 }}
+      {{- end }}
+  triggers:
+  {{- include "event-reporters.http.trigger" (dict "name" "workflows" "Values" .Values "payloadDest" "data.object") | nindent 4 }}
+{{- end }}

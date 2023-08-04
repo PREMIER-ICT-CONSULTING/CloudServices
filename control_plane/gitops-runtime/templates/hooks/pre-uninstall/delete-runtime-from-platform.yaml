@@ -1,0 +1,56 @@
+{{- $customCASecretName := ""}}
+{{- $customCASecretKey := ""}}
+{{- if or .Values.global.codefresh.tls.caCerts.secret.create .Values.global.codefresh.tls.caCerts.secretKeyRef }}
+  {{- $customCASecretName = .Values.global.codefresh.tls.caCerts.secret.create | ternary "codefresh-tls-certs" .Values.global.codefresh.tls.caCerts.secretKeyRef.name }}
+  {{- $customCASecretKey = .Values.global.codefresh.tls.caCerts.secret.create | ternary (default "ca-bundle.crt" .Values.global.codefresh.tls.caCerts.secret.key) .Values.global.codefresh.tls.caCerts.secretKeyRef.key }}
+{{- end }}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: delete-runtime-from-platform
+  annotations:
+    "helm.sh/hook": pre-delete
+    "helm.sh/hook-delete-policy": hook-succeeded,before-hook-creation,hook-failed
+spec:
+  backoffLimit: 3
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+      - name: delete-runtime-from-platform
+        image: "{{ .Values.installer.image.repository }}:{{ .Values.installer.image.tag | default .Chart.Version }}"
+        imagePullPolicy: {{ .Values.installer.image.pullPolicy }}
+        env:
+        - name: RUNTIME_NAME
+          value: {{ .Values.global.runtime.name }}
+        - name: PLATFORM_URL
+          value: {{ .Values.global.codefresh.url }}
+        - name: USER_TOKEN
+          {{- include "codefresh-gitops-runtime.installation-token-env-var-value" . | nindent 10 }}
+{{- if $customCASecretName }}
+        - name: SSL_CERT_FILE
+          value: /app/config/codefresh-tls-certs/{{ $customCASecretKey }}
+{{- end }}
+{{- if $customCASecretName }}
+        volumeMounts:
+        - mountPath: /app/config/codefresh-tls-certs
+          name: codefresh-tls-certs
+          readOnly: true
+{{- end }}
+        command: ["sh", "-c"]
+        args: 
+        - |
+          if [ ! -z "$USER_TOKEN" ]; then
+            curl ${PLATFORM_URL}/2.0/api/graphql -H "Authorization: ${USER_TOKEN}" -H "Content-Type: application/json" -d "{\"query\": \"mutation deleteRuntime(\$name: String"'!'") {\n  deleteRuntime(name: \$name) }\",\"variables\": {\"name\": \"${RUNTIME_NAME}\"}}"
+          else
+            echo "User token unavailable, unable to remove runtime ${RUNTIME_NAME} from platform, please remove it from UI"
+            exit 1
+          fi
+{{- if $customCASecretName }}
+      volumes:
+      - name: codefresh-tls-certs
+        secret:
+          secretName: {{ $customCASecretName }}
+          defaultMode: 420
+          optional: true
+{{- end }}

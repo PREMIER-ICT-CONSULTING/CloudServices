@@ -1,0 +1,18 @@
+annotations:
+  artifacthub.io/changes: |
+    - "[Added]: Flags to toggle provider-specific RBAC rules in Role and ClusterRole"
+apiVersion: v2
+appVersion: v1.4.0-cap-sw
+description: A Helm chart for Argo Rollouts
+home: https://github.com/argoproj/argo-helm
+icon: https://argoproj.github.io/argo-rollouts/assets/logo.png
+keywords:
+- argoproj
+- argo-rollouts
+maintainers:
+- name: argoproj
+  url: https://argoproj.github.io/
+name: argo-rollouts
+sources:
+- https://github.com/argoproj/argo-rollouts
+version: 2.22.1-1-cap-sw

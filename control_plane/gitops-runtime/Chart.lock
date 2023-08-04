@@ -1,0 +1,21 @@
+dependencies:
+- name: argo-cd
+  repository: https://codefresh-io.github.io/argo-helm
+  version: 5.38.1-1-cap-CR-18361
+- name: argo-events
+  repository: https://codefresh-io.github.io/argo-helm
+  version: 2.0.5-1-cf-init
+- name: argo-workflows
+  repository: https://codefresh-io.github.io/argo-helm
+  version: 0.22.9-1-CR-17426
+- name: argo-rollouts
+  repository: https://codefresh-io.github.io/argo-helm
+  version: 2.22.1-1-cap-sw
+- name: sealed-secrets
+  repository: https://bitnami-labs.github.io/sealed-secrets/
+  version: 2.7.3
+- name: codefresh-tunnel-client
+  repository: https://chartmuseum.codefresh.io/codefresh-tunnel-client
+  version: 0.1.12
+digest: sha256:703ee7a62637f8d196355551e3bb04efea8732d38d44aeaf0888c9b0de9cc664
+generated: "2023-07-17T15:14:37.444186778Z"
